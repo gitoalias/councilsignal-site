@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CouncilSignal — Know about the project before the bid</title>
+<meta name="description" content="CouncilSignal reads every city council agenda and planning commission packet in your towns and sends you one weekly briefing on the projects coming — months before they hit the bid boards.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316324F'/%3E%3Cpath d='M16 31 A16 16 0 0 1 48 31' fill='none' stroke='%23fff' stroke-opacity='.45' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M23 31 A9 9 0 0 1 41 31' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='31' r='3.2' fill='%23F97316'/%3E%3Cpath d='M20 42 L32 35 L44 42 Z' fill='%23fff'/%3E%3Crect x='23' y='44' width='4' height='8' fill='%23fff'/%3E%3Crect x='30' y='44' width='4' height='8' fill='%23fff'/%3E%3Crect x='37' y='44' width='4' height='8' fill='%23fff'/%3E%3Crect x='20' y='54' width='24' height='3' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#16324F; --navy-deep:#0E2338; --ink:#0F172A; --slate:#64748B;
+  --line:#E2E8F0; --paper:#F8FAFC; --white:#FFFFFF; --signal:#F97316;
+  --signal-dark:#EA6A0A;
+  --font-head:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --font-body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);color:var(--ink);background:var(--white);line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--font-head);line-height:1.2;letter-spacing:-0.01em}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+section{padding:88px 0}
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);transition:box-shadow .2s}
+header.scrolled{box-shadow:0 4px 18px rgba(15,23,42,.08)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.brand svg{width:34px;height:34px;display:block}
+.brand span{font-family:var(--font-head);font-weight:800;font-size:19px}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--slate);text-decoration:none;font-size:15px;font-weight:500}
+.nav-links a:hover{color:var(--ink)}
+.btn{display:inline-block;background:var(--signal);color:#fff;font-weight:600;font-size:16px;padding:13px 26px;border-radius:10px;text-decoration:none;border:none;cursor:pointer;transition:background .15s,transform .1s}
+.btn:hover{background:var(--signal-dark)}
+.btn:active{transform:translateY(1px)}
+.btn-nav{padding:10px 20px;font-size:15px}
+.btn-outline{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.35)}
+.btn-outline:hover{background:rgba(255,255,255,.1);border-color:#fff}
+/* ---------- hero ---------- */
+.hero{background:radial-gradient(900px 420px at 75% -60px,rgba(249,115,22,.16),transparent 60%),var(--navy);color:#fff;padding:104px 0 96px}
+.eyebrow{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#FDBA74;margin-bottom:18px}
+.hero h1{font-size:clamp(38px,5.4vw,60px);font-weight:800;max-width:16ch;margin-bottom:20px}
+.hero p.lede{font-size:clamp(17px,2vw,20px);color:#CBD5E1;max-width:38em;margin-bottom:34px}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.hero-fine{font-size:14px;color:#94A3B8}
+/* ---------- problem ---------- */
+.problem{background:var(--white)}
+.problem h2{font-size:clamp(28px,3.6vw,40px);max-width:22ch;margin-bottom:18px}
+.problem .standfirst{font-size:19px;color:var(--slate);max-width:44em;margin-bottom:40px}
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pain{border:1px solid var(--line);border-radius:14px;padding:26px;background:var(--paper)}
+.pain h3{font-size:18px;margin-bottom:10px}
+.pain p{font-size:15.5px;color:var(--slate)}
+.pain .num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;font-family:var(--font-head);font-weight:800;font-size:15px;margin-bottom:14px}
+/* ---------- how it works ---------- */
+.how{background:var(--paper)}
+.how h2{font-size:clamp(28px,3.6vw,40px);margin-bottom:14px;text-align:center}
+.how .sub{text-align:center;color:var(--slate);max-width:40em;margin:0 auto 48px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:step}
+.step{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:30px 26px;position:relative}
+.step::before{counter-increment:step;content:counter(step);display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--signal);color:#fff;font-family:var(--font-head);font-weight:800;font-size:17px;margin-bottom:16px}
+.step h3{font-size:19px;margin-bottom:10px}
+.step p{font-size:15.5px;color:var(--slate)}
+/* ---------- proof ---------- */
+.proof{background:var(--white)}
+.proof h2{font-size:clamp(28px,3.6vw,40px);margin-bottom:14px}
+.proof .sub{color:var(--slate);max-width:44em;margin-bottom:12px}
+.proof .honest{font-size:13.5px;color:var(--slate);border-left:3px solid var(--signal);padding:10px 16px;background:var(--paper);border-radius:0 8px 8px 0;margin:0 0 36px;max-width:52em}
+.signal-card{border:1px solid var(--line);border-radius:14px;padding:28px;margin-bottom:20px;background:#fff;box-shadow:0 2px 10px rgba(15,23,42,.04)}
+.signal-card .meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.tag{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 12px;border-radius:999px}
+.tag-town{background:var(--navy);color:#fff}
+.tag-stage{background:#DBEAFE;color:#1D4ED8}
+.signal-card h3{font-size:21px;margin-bottom:10px}
+.signal-card p{font-size:16px;color:#334155;margin-bottom:12px}
+.why{font-size:15.5px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:14px 18px;color:#7C2D12}
+.why strong{color:#9A3412}
+/* ---------- pricing ---------- */
+.pricing{background:var(--paper)}
+.pricing h2{font-size:clamp(28px,3.6vw,40px);text-align:center;margin-bottom:12px}
+.pricing .sub{text-align:center;color:var(--slate);margin-bottom:44px}
+.price-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:760px;margin:0 auto}
+.price-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:36px 32px;position:relative}
+.price-card.featured{border:2px solid var(--navy);box-shadow:0 12px 32px rgba(22,50,79,.12)}
+.badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--signal);color:#fff;font-size:12.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:5px 16px;border-radius:999px;white-space:nowrap}
+.price-card h3{font-size:20px;margin-bottom:6px}
+.price{font-family:var(--font-head);font-weight:800;font-size:44px;margin:8px 0 2px}
+.price small{font-size:16px;font-weight:600;color:var(--slate)}
+.price-note{font-size:14px;color:var(--slate);margin-bottom:22px}
+.price-card ul{list-style:none;margin-bottom:28px}
+.price-card li{font-size:15.5px;padding:7px 0 7px 30px;position:relative;color:#334155}
+.price-card li::before{content:"✓";position:absolute;left:4px;color:var(--signal);font-weight:700}
+.price-card .btn{width:100%;text-align:center}
+.pilot-strip{text-align:center;margin-top:30px;font-size:15px;color:var(--slate)}
+.pilot-strip strong{color:var(--ink)}
+/* ---------- faq ---------- */
+.faq{background:var(--white)}
+.faq h2{font-size:clamp(28px,3.6vw,40px);text-align:center;margin-bottom:40px}
+.faq-list{max-width:760px;margin:0 auto}
+.faq-item{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden;background:#fff}
+.faq-q{width:100%;background:none;border:none;text-align:left;font-family:var(--font-head);font-weight:700;font-size:17px;color:var(--ink);padding:20px 22px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.faq-q .icon{flex:none;width:30px;height:30px;border-radius:50%;background:var(--paper);border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-size:18px;font-weight:400;color:var(--signal);transition:transform .2s}
+.faq-item.open .faq-q .icon{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease}
+.faq-a p{padding:0 22px 22px;font-size:15.5px;color:var(--slate)}
+/* ---------- signup ---------- */
+.signup{background:var(--navy-deep);color:#fff}
+.signup .wrap{max-width:680px}
+.signup h2{font-size:clamp(28px,3.6vw,40px);margin-bottom:12px;text-align:center}
+.signup .sub{text-align:center;color:#94A3B8;margin-bottom:36px}
+form{background:#fff;border-radius:16px;padding:34px;color:var(--ink)}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.field input,.field textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:16px;font-family:var(--font-body);background:var(--paper)}
+.field input:focus,.field textarea:focus{outline:2px solid var(--signal);border-color:var(--signal);background:#fff}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.hp{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+form .btn{width:100%;font-size:17px;padding:15px}
+.form-note{text-align:center;font-size:13.5px;color:var(--slate);margin-top:14px}
+.form-status{border-radius:10px;padding:14px 18px;font-size:15px;margin-bottom:18px;display:none}
+.form-status.ok{display:block;background:#ECFDF5;border:1px solid #6EE7B7;color:#065F46}
+.form-status.err{display:block;background:#FEF2F2;border:1px solid #FCA5A5;color:#991B1B}
+/* ---------- footer ---------- */
+footer{background:var(--navy-deep);color:#94A3B8;padding:48px 0;border-top:1px solid rgba(255,255,255,.08)}
+.foot{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;align-items:flex-start}
+.foot .brand span{color:#fff}
+.foot small{display:block;margin-top:14px;font-size:13px;max-width:44em;line-height:1.7}
+.foot a{color:#CBD5E1;text-decoration:none}
+.foot a:hover{color:#fff}
+/* ---------- responsive ---------- */
+@media(max-width:820px){
+  .pain-grid,.steps{grid-template-columns:1fr}
+  .price-grid{grid-template-columns:1fr}
+  .nav-links a{display:none}
+  section{padding:64px 0}
+  .field-row{grid-template-columns:1fr}
+  form{padding:24px}
+}
+</style>
+</head>
+<body>
+
+<header id="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="CouncilSignal home">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#16324F"/><path d="M16 31 A16 16 0 0 1 48 31" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="3" stroke-linecap="round"/><path d="M23 31 A9 9 0 0 1 41 31" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="31" r="3.2" fill="#F97316"/><path d="M20 42 L32 35 L44 42 Z" fill="#fff"/><rect x="23" y="44" width="4" height="8" fill="#fff"/><rect x="30" y="44" width="4" height="8" fill="#fff"/><rect x="37" y="44" width="4" height="8" fill="#fff"/><rect x="20" y="54" width="24" height="3" rx="1" fill="#fff"/></svg>
+      <span>CouncilSignal</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#how">How it works</a>
+      <a href="#proof">Real example</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="#signup" class="btn btn-nav">Get the weekly briefing</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" style="padding:104px 0 96px">
+    <div class="wrap">
+      <span class="eyebrow">For custom home builders &amp; small developers</span>
+      <h1>Know about the project before the bid.</h1>
+      <p class="lede">CouncilSignal reads every city council agenda and planning commission packet in your towns, and sends you one weekly briefing on the projects coming down the pipe — usually 6 to 12 months before they show up on the bid boards.</p>
+      <div class="hero-ctas">
+        <a href="#signup" class="btn">Get the weekly briefing</a>
+        <a href="#proof" class="btn btn-outline">See a real example</a>
+      </div>
+      <p class="hero-fine">30-day pilot free &middot; No credit card &middot; Cancel anytime</p>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="problem">
+    <div class="wrap">
+      <h2>The bid board is where projects go to die — for you.</h2>
+      <p class="standfirst">By the time a job lands on a bid board, every hungry contractor in the county is bidding it and the margin is gone. The real money is made months earlier — and that information is public. It's just buried where nobody looks.</p>
+      <div class="pain-grid">
+        <div class="pain">
+          <span class="num">1</span>
+          <h3>You hear about it too late</h3>
+          <p>The first public discussion of a project happens at a council or planning commission meeting — half a year or more before plans are drawn and bids go out. If the bid board is your first look, you're last in line.</p>
+        </div>
+        <div class="pain">
+          <span class="num">2</span>
+          <h3>The connected guys hear it first</h3>
+          <p>Some developers just <em>know</em> what's coming. They don't have better sources — they have better habits. They (or someone they pay) actually read the agendas. Now a machine does it for you, every week, for every town.</p>
+        </div>
+        <div class="pain">
+          <span class="num">3</span>
+          <h3>Small towns are a black box</h3>
+          <p>The big cities get watched. But the small towns — where the teardowns, lot splits, and ADU fights actually happen — publish agendas as PDFs on websites nobody visits. That's exactly where we look.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <div class="wrap">
+      <h2>One email. Every Monday. Zero meetings attended.</h2>
+      <p class="sub">Here's the whole operation:</p>
+      <div class="steps">
+        <div class="step">
+          <h3>We watch every council agenda</h3>
+          <p>We monitor the agendas, minutes, and meeting packets of every town in your metro — including the small ones nobody else bothers to cover.</p>
+        </div>
+        <div class="step">
+          <h3>We pull out the project signals</h3>
+          <p>Our system reads each document and flags what matters to a builder: rezonings, subdivisions, site plans, ADU rule changes, commercial projects, infrastructure work. The routine stuff gets filtered out.</p>
+        </div>
+        <div class="step">
+          <h3>You get a weekly briefing</h3>
+          <p>One email, grouped by town. Each signal tells you why it matters and links straight to the public document it came from, so you can verify it yourself in one click.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROOF -->
+  <section class="proof" id="proof">
+    <div class="wrap">
+      <h2>Don't take our word for it. Take Brisbane's.</h2>
+      <p class="sub">Below are two real signals from an actual briefing. This is what lands in your inbox:</p>
+      <p class="honest"><strong>A note on honesty:</strong> these are genuine signals from our pilot monitoring, week of September 7–13, 2026. Signals are drawn from public agendas and minutes — always confirm details with the town before acting on them.</p>
+
+      <article class="signal-card">
+        <div class="meta">
+          <span class="tag tag-town">Brisbane · San Mateo County</span>
+          <span class="tag tag-stage">Hearing scheduled</span>
+        </div>
+        <h3>Baylands Development Agreement — 2,200 homes, 6.5M sq ft commercial</h3>
+        <p>The Planning Commission held a public hearing on the development agreement for the Brisbane Baylands Specific Plan: 2,200 homes, 6.5 million square feet of commercial, office, retail and life-science space, a 500,000 sq ft hotel, a middle school, and 157 acres of open space — with a Final EIR prepared.</p>
+        <p class="why"><strong>Why it matters:</strong> A development agreement of this scale locks in a decade-plus pipeline. The phasing decisions made this fall determine which residential and commercial blocks go to bid first.</p>
+      </article>
+
+      <article class="signal-card">
+        <div class="meta">
+          <span class="tag tag-town">Woodside · San Mateo County</span>
+          <span class="tag tag-stage">Tracked across 3 meetings</span>
+        </div>
+        <h3>Conservation easement release could unlock estate parcels for ADUs</h3>
+        <p>We followed one property — 1 Montelena Ct — from its first Planning Commission hearing in July through a 2–1 vote recommending easement abandonment, to a final Town Council decision hearing in September. The ask: release an 80-foot conservation easement so the owner can build ADUs.</p>
+        <p class="why"><strong>Why it matters:</strong> Woodside almost never releases conservation easements. Approval would green-light the first easement-for-ADU conversion and tee up a formal town-wide process — quietly expanding buildable area on the large estate lots builders already target.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="wrap">
+      <h2>One subscription. Your whole company reads it.</h2>
+      <p class="sub">Priced per metro area. Forward the briefing to your estimators, supers, and partners — no per-seat nonsense.</p>
+      <div class="price-grid">
+        <div class="price-card">
+          <h3>Monthly</h3>
+          <div class="price">$299<small>/mo</small></div>
+          <p class="price-note">Per metro area, billed monthly.</p>
+          <ul>
+            <li>Weekly briefing for every town in your metro</li>
+            <li>Project signals: rezonings, subdivisions, site plans, ADU rules &amp; more</li>
+            <li>Every signal linked to its source document</li>
+            <li>Request towns — we prioritize where you build</li>
+            <li>Cancel anytime</li>
+          </ul>
+          <a href="#signup" class="btn">Start free 30-day pilot</a>
+        </div>
+        <div class="price-card featured">
+          <span class="badge">Best value</span>
+          <h3>Annual</h3>
+          <div class="price">$2,990<small>/yr</small></div>
+          <p class="price-note">Per metro area. Two months free — save $598.</p>
+          <ul>
+            <li>Everything in Monthly</li>
+            <li>Locked pricing for 12 months</li>
+            <li>Priority town requests</li>
+            <li>Cancel anytime — refund for unused full months</li>
+          </ul>
+          <a href="#signup" class="btn">Start free 30-day pilot</a>
+        </div>
+      </div>
+      <p class="pilot-strip"><strong>Every plan starts with a free 30-day pilot.</strong> Real briefings, your towns, no credit card. If it doesn't pay for itself, don't pay for it.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="wrap">
+      <h2>Straight answers</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">Where does the information come from?<span class="icon">+</span></button>
+          <div class="faq-a"><p>Public records. City council agendas, planning commission minutes, and meeting packets published by each town. Every signal in your briefing links directly to the source document it came from, so you can read the original yourself.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">Which towns do you cover?<span class="icon">+</span></button>
+          <div class="faq-a"><p>We're live in the South Bay — San Mateo and Santa Clara counties — starting with towns like Woodside, Brisbane, Los Gatos, and Colma, and we're adding more every week. When you sign up, tell us where you build and we'll move those towns to the front of the line.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">How is this different from Dodge or ConstructConnect?<span class="icon">+</span></button>
+          <div class="faq-a"><p>Those services track projects once they're designed and out to bid — valuable, but late. We catch the earlier conversation: the rezoning discussion, the development agreement negotiation, the first subdivision hearing. That's usually months before bid stage. Use both. We're the early warning; they're the bid list.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">What exactly do I get each week?<span class="icon">+</span></button>
+          <div class="faq-a"><p>One email, every week, grouped by town. Each item is a project signal — what happened, what stage it's at (early discussion, hearing scheduled, approved), why it matters to a builder, and a link to the source document. No fluff, no 200-page packets.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">Is the information guaranteed accurate?<span class="icon">+</span></button>
+          <div class="faq-a"><p>No — and anyone who guarantees that is lying to you. Signals are pulled from public documents by software, and towns write confusing agendas. That's why every signal links to its source: check it yourself in one click, and always confirm details with the town before you act on anything.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">Can I cancel anytime?<span class="icon">+</span></button>
+          <div class="faq-a"><p>Yes. Monthly plans cancel in one click and you keep every briefing you've already received. Annual plans get a refund for unused full months. No retention calls, no dark patterns.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIGNUP -->
+  <section class="signup" id="signup">
+    <div class="wrap">
+      <h2>Get the weekly briefing.</h2>
+      <p class="sub">Start your free 30-day pilot. Real briefings, your towns, no credit card.</p>
+      <form id="waitlist-form" novalidate>
+        <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-name">Name</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required placeholder="Jane Builder">
+          </div>
+          <div class="field">
+            <label for="f-company">Company</label>
+            <input id="f-company" name="company" type="text" autocomplete="organization" placeholder="Acme Custom Homes">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-email">Work email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required placeholder="jane@acmecustomhomes.com">
+        </div>
+        <div class="field">
+          <label for="f-territory">Where do you build? <span style="font-weight:400;color:var(--slate)">(towns or counties — we'll prioritize them)</span></label>
+          <textarea id="f-territory" name="territory" rows="2" placeholder="e.g. Los Altos Hills, Saratoga, Woodside"></textarea>
+        </div>
+        <!-- honeypot: real users never fill this in -->
+        <div class="hp" aria-hidden="true">
+          <label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        </div>
+        <button type="submit" class="btn" id="form-submit">Start my free 30-day pilot</button>
+        <p class="form-note">No credit card. No spam — one briefing email a week, plus your pilot setup. Unsubscribe anytime.</p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <a class="brand" href="#top" aria-label="CouncilSignal home">
+        <svg viewBox="0 0 64 64" aria-hidden="true" style="width:30px;height:30px"><rect width="64" height="64" rx="14" fill="#16324F"/><path d="M16 31 A16 16 0 0 1 48 31" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="3" stroke-linecap="round"/><path d="M23 31 A9 9 0 0 1 41 31" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="31" r="3.2" fill="#F97316"/><path d="M20 42 L32 35 L44 42 Z" fill="#fff"/><rect x="23" y="44" width="4" height="8" fill="#fff"/><rect x="30" y="44" width="4" height="8" fill="#fff"/><rect x="37" y="44" width="4" height="8" fill="#fff"/><rect x="20" y="54" width="24" height="3" rx="1" fill="#fff"/></svg>
+        <span>CouncilSignal</span>
+      </a>
+      <small>Know about the project before the bid.<br>
+      © 2026 CouncilSignal · South Bay, California · <a href="mailto:hello@councilsignal.ai">hello@councilsignal.ai</a></small>
+      <small>Signals are drawn from public municipal records and are not legal, financial, or investment advice. Always confirm details with the issuing jurisdiction before acting.</small>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================================
+   WAITLIST FORM CONFIG — set this before launch.
+   ----------------------------------------------------------------------------
+   Paste your form endpoint URL below. Works with Formspree, Basin, Getform,
+   Loops, or your own API. The form POSTs this JSON body:
+
+       { "name": "...", "company": "...", "email": "...",
+         "territory": "...", "source": "landing", "ts": "2026-..." }
+
+   Expected: any HTTP 2xx response counts as success.
+   If you use a service that expects form-encoded data instead of JSON,
+   change the fetch body to `new URLSearchParams(data)` and drop the
+   Content-Type header.
+
+   Leave WAITLIST_ENDPOINT as "" only while testing locally — in that case
+   visitors see a "not connected yet" notice instead of their signup being
+   silently lost.
+   ============================================================================ */
+const WAITLIST_ENDPOINT = "";
+const CONTACT_EMAIL = "hello@councilsignal.ai";
+
+(function () {
+  "use strict";
+
+  /* Sticky header shadow */
+  var header = document.getElementById("site-header");
+  function onScroll() { header.classList.toggle("scrolled", window.scrollY > 8); }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* FAQ accordion */
+  document.querySelectorAll(".faq-item").forEach(function (item) {
+    var btn = item.querySelector(".faq-q");
+    var panel = item.querySelector(".faq-a");
+    btn.addEventListener("click", function () {
+      var open = item.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      panel.style.maxHeight = open ? panel.scrollHeight + "px" : "0px";
+    });
+  });
+
+  /* Waitlist form */
+  var form = document.getElementById("waitlist-form");
+  var status = document.getElementById("form-status");
+  var submitBtn = document.getElementById("form-submit");
+
+  function showStatus(kind, html) {
+    status.className = "form-status " + kind;
+    status.innerHTML = html;
+    status.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    /* Honeypot: bots fill this, humans don't */
+    if (form.website && form.website.value) { return; }
+
+    var name = document.getElementById("f-name").value.trim();
+    var company = document.getElementById("f-company").value.trim();
+    var email = document.getElementById("f-email").value.trim();
+    var territory = document.getElementById("f-territory").value.trim();
+
+    if (!name) { showStatus("err", "Please enter your name."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showStatus("err", "Please enter a valid email address.");
+      return;
+    }
+
+    if (!WAITLIST_ENDPOINT) {
+      showStatus("err",
+        "Our signup form isn't connected yet — we're setting it up now. " +
+        'Email us directly at <a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + "</a> " +
+        "and we'll start your pilot manually.");
+      return;
+    }
+
+    var payload = {
+      name: name, company: company, email: email, territory: territory,
+      source: "landing", ts: new Date().toISOString()
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Starting your pilot…";
+
+    fetch(WAITLIST_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(function (res) {
+      if (!res.ok) { throw new Error("HTTP " + res.status); }
+      showStatus("ok",
+        "<strong>You're in, " + escapeHtml(name.split(" ")[0]) + ".</strong> " +
+        "Watch your inbox — your first briefing setup email is on its way. " +
+        "Your 30-day pilot starts with the next weekly briefing.");
+      form.reset();
+    }).catch(function () {
+      showStatus("err",
+        "Something went wrong sending that. Please try again, or email us at " +
+        '<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + "</a>.");
+    }).finally(function () {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Start my free 30-day pilot";
+    });
+  });
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+})();
+</script>
+</body>
+</html>
